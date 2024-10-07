@@ -24,7 +24,7 @@
 			return false;
 		}
 
-		if (!by) {
+		if (by === 'Payed by') {
 			error = 'Payed by is required';
 			return false;
 		}
