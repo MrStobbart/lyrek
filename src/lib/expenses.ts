@@ -1,20 +1,4 @@
-export type ExpenseByParticipant = {
-	plus: number;
-	minus: number;
-};
-
-// TODO this does need and id
-export type Expense = {
-	id: string;
-	title: string;
-	amount: number;
-	currency: string;
-	by: string;
-	date: number;
-	category?: string;
-	isPayment: boolean;
-	participants: Record<string, ExpenseByParticipant>;
-};
+import type { Expense } from './types';
 
 export const sheetToExpenses = (sheetData: string[][] | null | undefined): Expense[] => {
 	return sheetData ? sheetData.map(rowToExpense).slice(1) : [];

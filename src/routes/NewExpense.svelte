@@ -1,8 +1,8 @@
 <script lang="ts">
-	import type { Expense } from '$lib/expenses';
+	import type { Expense, MessageToServer } from '$lib/types';
 	import CurrencyInput from './CurrencyInput.svelte';
 
-	export let sendMessage: (message: string) => void;
+	export let sendMessage: (message: MessageToServer) => Promise<void>;
 
 	let title: string;
 	let amount: number;
@@ -59,7 +59,7 @@
 
 		console.log('Save expense', newExpense);
 
-		sendMessage(JSON.stringify({ newExpense }));
+		sendMessage({ createExpense: newExpense });
 
 		title = '';
 		amount = 0;
