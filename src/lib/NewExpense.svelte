@@ -1,14 +1,13 @@
 <script lang="ts">
+	import { currentUserStore, sendMessageStore } from '$lib/stores';
 	import type { Expense, MessageToServer } from '$lib/types';
-	import CurrencyInput from './CurrencyInput.svelte';
+	import CurrencyInput from '../routes/CurrencyInput.svelte';
 
-	export let sendMessage: (message: MessageToServer) => Promise<void>;
+	let sendMessage = $sendMessageStore;
 
 	let title: string;
 	let amount: number;
 	let by: string;
-
-	$: console.log(amount);
 
 	let error = '';
 
@@ -69,8 +68,8 @@
 <div class="flex flex-col gap-4">
 	<CurrencyInput bind:cents={amount} />
 	<input class="input input-bordered w-full max-w-xs" bind:value={title} placeholder="Title" />
-	<select class="select select-bordered w-full max-w-xs" bind:value={by}>
-		<option disabled selected>Payed by</option>
+	<select class="select select-bordered w-full max-w-xs" bind:value={$currentUserStore}>
+		<option disabled selected value="">Payed by</option>
 		<!-- TODO -->
 		<option value="marek">Marek</option>
 		<option value="lydia">Lydia</option>

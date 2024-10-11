@@ -1,9 +1,14 @@
 <script lang="ts">
-	import type { Expense, MessageToClient, MessageToServer } from '$lib/types';
+	import type { Expense, MessageToClient, MessageToServer, SendMessageToServer } from '$lib/types';
 	import { writable } from 'svelte/store';
-	import CurrentBalance from './CurrentBalance.svelte';
-	import NewExpense from './NewExpense.svelte';
-	import { expensesStore, loadedEpxenseIdsStore, participantsStore } from '$lib/stores';
+	import CurrentBalance from './expenses/CurrentBalance.svelte';
+	import NewExpense from '../lib/NewExpense.svelte';
+	import {
+		expensesStore,
+		loadedExpenseIdsStore,
+		participantsStore,
+		sendMessageStore
+	} from '$lib/stores';
 	import { wait } from '$lib/util';
 
 	const wsUri = 'ws://127.0.0.1:5000/lyrek/ws';
@@ -13,7 +18,7 @@
 		return ws.readyState === ws.OPEN;
 	};
 
-	const sendMessage = async (message: MessageToServer, withRetry = true) => {
+	const sendMessage: SendMessageToServer = async (message, withRetry = true) => {
 		if (wsIsOpen(webSocket)) {
 			console.log(`SENT: ${message}`);
 			webSocket.send(JSON.stringify(message));
@@ -30,6 +35,7 @@
 
 	webSocket.onopen = (e) => {
 		console.log('CONNECTED');
+		sendMessageStore.set(sendMessage);
 	};
 
 	webSocket.onclose = (e) => {
@@ -46,7 +52,7 @@
 			expensesStore.set(expenses);
 		}
 
-		if (createdExpense && !$loadedEpxenseIdsStore[createdExpense.id]) {
+		if (createdExpense && !$loadedExpenseIdsStore[createdExpense.id]) {
 			expensesStore.update((oldExpenses) => [...oldExpenses, createdExpense]);
 		}
 
@@ -71,7 +77,3 @@
 
 	console.log('expenses', $expensesStore);
 </script>
-
-<CurrentBalance expenses={$expensesStore} participants={$participantsStore} />
-
-<NewExpense {sendMessage} />

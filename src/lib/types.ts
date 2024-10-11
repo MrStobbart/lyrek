@@ -4,6 +4,8 @@ export type MessageToServer = {
 	deleteExpenseId?: string;
 };
 
+export type SendMessageToServer = (message: MessageToServer, withRetry?: boolean) => Promise<void>;
+
 export type MessageToClient = {
 	expenses?: Expense[];
 	createdExpense?: Expense;
