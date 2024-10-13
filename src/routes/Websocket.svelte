@@ -57,11 +57,14 @@
 		}
 
 		if (updatedExpense) {
+			console.log({ updatedExpense });
+
 			expensesStore.update((oldExpenses) =>
 				oldExpenses.map((oldExpense) =>
 					oldExpense.id === updatedExpense.id ? updatedExpense : oldExpense
 				)
 			);
+			console.log({ $expensesStore });
 		}
 
 		if (deletedExpenseId) {

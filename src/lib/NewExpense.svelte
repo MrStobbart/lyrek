@@ -4,15 +4,14 @@
 	import type { Expense, MessageToServer } from '$lib/types';
 	import CurrencyInput from '../routes/CurrencyInput.svelte';
 
-	// TODO maybe use composition here
-
-	let sendMessage = $sendMessageStore;
-
+	export let id: string = crypto.randomUUID();
 	export let title: string = '';
 	export let amount: number = 0;
 	export let by: string = '';
 	export let category: string = '';
-	export let isUpdate: boolean = false;
+	export let save: (expense: Expense) => void;
+
+	$: console.log({ by });
 
 	let error = '';
 
@@ -46,8 +45,8 @@
 			return;
 		}
 
-		const newExpense: Expense = {
-			id: crypto.randomUUID(),
+		save({
+			id,
 			title,
 			amount,
 			currency: 'EUR',
@@ -59,11 +58,7 @@
 				marek: { minus: parseInt((amount / 2).toFixed()), plus: getPlusFor('marek', amount) },
 				lydia: { minus: parseInt((amount / 2).toFixed()), plus: getPlusFor('lydia', amount) }
 			}
-		};
-
-		console.log('Save expense', newExpense);
-
-		isUpdate ? updateExpense(newExpense) : createExpense(newExpense);
+		});
 
 		title = '';
 		amount = 0;
@@ -75,7 +70,7 @@
 <div class="flex flex-col gap-4">
 	<CurrencyInput bind:cents={amount} />
 	<input class="input input-bordered w-full max-w-xs" bind:value={title} placeholder="Title" />
-	<select class="select select-bordered w-full max-w-xs" bind:value={$currentUserStore}>
+	<select class="select select-bordered w-full max-w-xs" bind:value={by}>
 		<option disabled selected value="">Payed by</option>
 		<!-- TODO -->
 		<option value="marek">Marek</option>
@@ -87,7 +82,8 @@
 	{/if}
 
 	<!-- TODO add previous top titles that can be clicked instead of the category -->
-
+	<!-- TODO availableCagetories are all that were already selected in expenses -->
+	<!-- TODO alternatively you can also create a new one  -->
 	<div class="flex gap-4">
 		{#each availableCategories as availableCategory}
 			<button
@@ -95,9 +91,6 @@
 				class:btn-accent={category === availableCategory}
 				on:click={() => {
 					saveExpense(availableCategory);
-					if (isUpdate) {
-						goto('/expenses');
-					}
 				}}>{availableCategory}</button
 			>
 		{/each}
