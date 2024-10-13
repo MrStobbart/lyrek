@@ -5,16 +5,14 @@
 	let inputHeight: number;
 	$: actualTextWidth = !displayAmount ? 0 : textWidth;
 
-	$: if (cents === 0) {
-		handleInput(cents.toString());
-	}
-
 	const handleInput = (newValue: string) => {
 		cents = parseInt((newValue || '0').replaceAll('.', '').replaceAll(',', ''));
 		const paddedValue = cents.toString().padStart(3, '0');
 		displayAmount = `${paddedValue.slice(0, -2)},${paddedValue.slice(-2)}`;
 		console.log({ newValue, cents, displayAmount });
 	};
+
+	handleInput(cents.toString());
 </script>
 
 <div id="input-container" bind:clientHeight={inputHeight}>
