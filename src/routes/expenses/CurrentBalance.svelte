@@ -2,22 +2,17 @@
 	import { toDisplayEur } from '$lib/expenses';
 	import EditIcon from '$lib/icons/editIcon.svelte';
 	import TrashIcon from '$lib/icons/trashIcon.svelte';
-	import { expensesStore, participantsStore, sendMessageStore } from '$lib/stores';
+	import { deleteExpense, expensesStore, participantsStore, sendMessageStore } from '$lib/stores';
 	import type { Expense } from '$lib/types';
 	import { writable, type Writable } from 'svelte/store';
 
-	let expenses = $expensesStore;
-	let participants = $participantsStore;
-
-	let sendMessage = $sendMessageStore;
-
-	$: console.log('participants', participants);
-	$: console.log('expenses', expenses);
+	$: console.log('participants', $participantsStore);
+	$: console.log('expenses in current balance ', $expensesStore);
 
 	$: balance = Object.fromEntries(
-		participants.map((name) => [
+		$participantsStore.map((name) => [
 			name,
-			expenses.reduce(
+			$expensesStore.reduce(
 				(sum, { participants }) =>
 					sum + (participants[name].plus ?? 0) - (participants[name].minus ?? 0),
 				0
@@ -45,7 +40,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				{#each expenses as { title, amount, by, category }}
+				{#each $expensesStore as { id, title, amount, by, category }}
 					<!-- TODO add pinned rows of months later -->
 					<tr>
 						<th>{title}</th>
@@ -53,8 +48,10 @@
 						<td>{toDisplayEur(amount)}</td>
 						<td>{by}</td>
 						<td>
-							<button class="btn btn-circle btn-outline"><EditIcon /></button>
-							<button class="btn btn-circle btn-outline"><TrashIcon /></button>
+							<a class="btn btn-circle btn-outline" href={`/edit/${id}`}><EditIcon /></a>
+							<button class="btn btn-circle btn-outline" on:click={() => deleteExpense(id)}
+								><TrashIcon /></button
+							>
 						</td>
 					</tr>
 				{/each}

@@ -1,17 +1,22 @@
 <script lang="ts">
-	import { currentUserStore, sendMessageStore } from '$lib/stores';
+	import { goto } from '$app/navigation';
+	import { createExpense, currentUserStore, sendMessageStore, updateExpense } from '$lib/stores';
 	import type { Expense, MessageToServer } from '$lib/types';
 	import CurrencyInput from '../routes/CurrencyInput.svelte';
 
+	// TODO maybe use composition here
+
 	let sendMessage = $sendMessageStore;
 
-	let title: string;
-	let amount: number;
-	let by: string;
+	export let title: string = '';
+	export let amount: number = 0;
+	export let by: string = '';
+	export let category: string = '';
+	export let isUpdate: boolean = false;
 
 	let error = '';
 
-	const availableCategores = ['groceries', 'holidays', 'pharmacy', 'drugstore', 'cat'];
+	const availableCategories = ['groceries', 'holidays', 'pharmacy', 'drugstore', 'cat'];
 
 	const validateInput = (selectedCategory?: string) => {
 		if (!title) {
@@ -58,11 +63,13 @@
 
 		console.log('Save expense', newExpense);
 
-		sendMessage({ createExpense: newExpense });
+		isUpdate ? updateExpense(newExpense) : createExpense(newExpense);
 
 		title = '';
 		amount = 0;
 	};
+
+	console.log({ category });
 </script>
 
 <div class="flex flex-col gap-4">
@@ -82,9 +89,16 @@
 	<!-- TODO add previous top titles that can be clicked instead of the category -->
 
 	<div class="flex gap-4">
-		{#each availableCategores as category}
-			<button class="btn text-xs font-light w-16" on:click={() => saveExpense(category)}
-				>{category}</button
+		{#each availableCategories as availableCategory}
+			<button
+				class="btn text-xs font-light w-16"
+				class:btn-accent={category === availableCategory}
+				on:click={() => {
+					saveExpense(availableCategory);
+					if (isUpdate) {
+						goto('/expenses');
+					}
+				}}>{availableCategory}</button
 			>
 		{/each}
 	</div>

@@ -20,7 +20,7 @@
 
 	const sendMessage: SendMessageToServer = async (message, withRetry = true) => {
 		if (wsIsOpen(webSocket)) {
-			console.log(`SENT: ${message}`);
+			console.log('Sent message', message);
 			webSocket.send(JSON.stringify(message));
 		} else {
 			console.log('Aborting, not connected. Reconnecting...');
@@ -43,7 +43,7 @@
 	};
 
 	webSocket.onmessage = (e) => {
-		console.log(`RECEIVED: ${e.data}`);
+		console.log('Received message:', e.data);
 		const { expenses, createdExpense, updatedExpense, deletedExpenseId }: MessageToClient =
 			JSON.parse(e.data);
 
