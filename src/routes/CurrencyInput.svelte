@@ -1,18 +1,18 @@
 <script lang="ts">
-	export let cents: number;
-	let displayAmount = '0,00';
+	export let cents: number = 0;
 	let textWidth: number;
 	let inputHeight: number;
+	$: displayAmount = centsToDisplayAmount(cents);
 	$: actualTextWidth = !displayAmount ? 0 : textWidth;
 
-	const handleInput = (newValue: string) => {
-		cents = parseInt((newValue || '0').replaceAll('.', '').replaceAll(',', ''));
+	const centsToDisplayAmount = (cents: number) => {
 		const paddedValue = cents.toString().padStart(3, '0');
-		displayAmount = `${paddedValue.slice(0, -2)},${paddedValue.slice(-2)}`;
-		console.log({ newValue, cents, displayAmount });
+		return `${paddedValue.slice(0, -2)},${paddedValue.slice(-2)}`;
 	};
 
-	handleInput(cents.toString());
+	const displayAmountToCents = (newValue: string) => {
+		return parseInt((newValue || '0').replaceAll('.', '').replaceAll(',', ''));
+	};
 </script>
 
 <div id="input-container" bind:clientHeight={inputHeight}>
@@ -21,9 +21,11 @@
 		type="text"
 		pattern="[0-9]+([\.,][0-9]+)?"
 		inputmode="numeric"
-		bind:value={displayAmount}
+		value={displayAmount}
 		class="input input-bordered w-full max-w-xs"
-		on:input={(event) => handleInput(event.currentTarget.value)}
+		on:input={(event) => {
+			cents = displayAmountToCents(event.currentTarget.value);
+		}}
 		autofocus
 	/>
 	<div id="a" bind:clientWidth={textWidth}>{displayAmount}</div>

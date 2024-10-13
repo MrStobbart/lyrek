@@ -27,7 +27,7 @@
 			return false;
 		}
 
-		if (by === 'Payed by') {
+		if (by === 'Payed by' || by === '') {
 			error = 'Payed by is required';
 			return false;
 		}
