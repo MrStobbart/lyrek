@@ -1,19 +1,32 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { createExpense, currentUserStore, sendMessageStore, updateExpense } from '$lib/stores';
+	import {
+		createExpense,
+		currentUserStore,
+		expensesStore,
+		sendMessageStore,
+		updateExpense
+	} from '$lib/stores';
 	import type { Expense, MessageToServer } from '$lib/types';
 	import CurrencyInput from '../routes/CurrencyInput.svelte';
 
-	export let id: string = crypto.randomUUID();
-	export let title: string = '';
-	export let amount: number = 0;
-	export let by: string = '';
-	export let category: string = '';
-	export let save: (expense: Expense) => void;
+	let {
+		id = crypto.randomUUID(),
+		title = '',
+		amount = 0,
+		by = '',
+		category = '',
+		save
+	}: {
+		id?: string;
+		title?: string;
+		amount?: number;
+		by?: string;
+		category?: string;
+		save: (expense: Expense) => void;
+	} = $props();
 
-	$: console.log({ by });
-
-	let error = '';
+	let error = $state('');
 
 	const availableCategories = ['groceries', 'holidays', 'pharmacy', 'drugstore', 'cat'];
 
@@ -63,8 +76,6 @@
 		title = '';
 		amount = 0;
 	};
-
-	console.log({ category });
 </script>
 
 <div class="flex flex-col gap-4">
@@ -89,7 +100,7 @@
 			<button
 				class="btn text-xs font-light w-16"
 				class:btn-accent={category === availableCategory}
-				on:click={() => {
+				onclick={() => {
 					saveExpense(availableCategory);
 				}}>{availableCategory}</button
 			>
