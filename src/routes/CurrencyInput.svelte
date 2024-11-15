@@ -22,7 +22,7 @@
 		pattern="[0-9]+([\.,][0-9]+)?"
 		inputmode="numeric"
 		value={displayAmount}
-		class="input input-bordered w-full max-w-xs"
+		class="input w-full max-w-xs"
 		oninput={(event) => {
 			cents = displayAmountToCents(event.currentTarget.value);
 		}}

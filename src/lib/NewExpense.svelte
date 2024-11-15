@@ -71,8 +71,8 @@
 
 <div class="flex flex-col gap-4 items-center">
 	<CurrencyInput bind:cents={amount} />
-	<input class="input input-bordered w-full max-w-xs" bind:value={title} placeholder="Title" />
-	<select class="select select-bordered w-full max-w-xs" bind:value={by}>
+	<input class="input w-full max-w-xs" bind:value={title} placeholder="Title" />
+	<select class="select w-full max-w-xs" bind:value={by}>
 		<option disabled selected value="">Payed by</option>
 		<!-- TODO -->
 		<option value="marek">Marek</option>
@@ -95,7 +95,7 @@
 		{/each}
 	</div>
 	<input
-		class="input input-bordered w-full max-w-xs"
+		class="input w-full max-w-xs input-sm"
 		bind:value={category}
 		placeholder="New category name"
 	/>
