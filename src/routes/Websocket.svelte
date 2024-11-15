@@ -1,15 +1,10 @@
 <script lang="ts">
-	import type { Expense, MessageToClient, MessageToServer, SendMessageToServer } from '$lib/types';
-	import { writable } from 'svelte/store';
-	import CurrentBalance from './expenses/CurrentBalance.svelte';
-	import NewExpense from '../lib/NewExpense.svelte';
-	import {
-		expensesStore,
-		loadedExpenseIdsStore,
-		participantsStore,
-		sendMessageStore
-	} from '$lib/stores';
+	import type { MessageToClient, SendMessageToServer } from '$lib/types';
+	import { expensesState, loadedExpenseIdsDerived, sendMessageState } from '$lib/stores.svelte';
 	import { wait } from '$lib/util';
+
+	const [_, setSendMessage] = sendMessageState;
+	const [getExpenses, setExpenses] = expensesState;
 
 	const wsUri = 'ws://127.0.0.1:5000/lyrek/ws';
 	let webSocket = new WebSocket(wsUri);
@@ -35,7 +30,7 @@
 
 	webSocket.onopen = (e) => {
 		console.log('CONNECTED');
-		sendMessageStore.set(sendMessage);
+		setSendMessage(sendMessage);
 	};
 
 	webSocket.onclose = (e) => {
@@ -49,28 +44,26 @@
 
 		if (expenses) {
 			console.log('load expenses', expenses);
-			expensesStore.set(expenses);
+			setExpenses(expenses);
 		}
 
-		if (createdExpense && !$loadedExpenseIdsStore[createdExpense.id]) {
-			expensesStore.update((oldExpenses) => [...oldExpenses, createdExpense]);
+		if (createdExpense && !loadedExpenseIdsDerived()[createdExpense.id]) {
+			setExpenses([...getExpenses(), createdExpense]);
 		}
 
 		if (updatedExpense) {
 			console.log({ updatedExpense });
 
-			expensesStore.update((oldExpenses) =>
-				oldExpenses.map((oldExpense) =>
+			setExpenses(
+				getExpenses().map((oldExpense) =>
 					oldExpense.id === updatedExpense.id ? updatedExpense : oldExpense
 				)
 			);
-			console.log({ $expensesStore });
+			console.log({ expenses: getExpenses() });
 		}
 
 		if (deletedExpenseId) {
-			expensesStore.update((oldExpenses) =>
-				oldExpenses.filter(({ id }) => id !== deletedExpenseId)
-			);
+			setExpenses(getExpenses().filter(({ id }) => id !== deletedExpenseId));
 		}
 	};
 
@@ -78,5 +71,5 @@
 		console.error(e);
 	};
 
-	console.log('expenses', $expensesStore);
+	console.log('expenses', getExpenses());
 </script>

@@ -1,12 +1,4 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
-	import {
-		createExpense,
-		currentUserStore,
-		expensesStore,
-		sendMessageStore,
-		updateExpense
-	} from '$lib/stores';
 	import type { Expense, MessageToServer } from '$lib/types';
 	import CurrencyInput from '../routes/CurrencyInput.svelte';
 
@@ -30,7 +22,7 @@
 
 	const availableCategories = ['groceries', 'holidays', 'pharmacy', 'drugstore', 'cat'];
 
-	const validateInput = (selectedCategory?: string) => {
+	const validateInput = () => {
 		if (!title) {
 			error = 'Title is required';
 			return false;
@@ -78,7 +70,7 @@
 	};
 </script>
 
-<div class="flex flex-col gap-4">
+<div class="flex flex-col gap-4 items-center">
 	<CurrencyInput bind:cents={amount} />
 	<input class="input input-bordered w-full max-w-xs" bind:value={title} placeholder="Title" />
 	<select class="select select-bordered w-full max-w-xs" bind:value={by}>

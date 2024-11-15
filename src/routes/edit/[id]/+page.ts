@@ -1,13 +1,12 @@
-import { expensesStore } from '$lib/stores';
-import { get } from 'svelte/store';
+import { expensesState } from '$lib/stores.svelte';
 import type { PageLoad } from './$types';
 
 export const load: PageLoad = async ({ params }) => {
-	const expenses = get(expensesStore);
+	const [getExpenses] = expensesState;
 
-	console.log('expenses in edit', expenses);
+	console.log('expenses in edit', getExpenses());
 
-	const expenseToEdit = expenses.find(({ id }) => id === params.id);
+	const expenseToEdit = getExpenses().find(({ id }) => id === params.id);
 
 	console.log('expense to edit', expenseToEdit);
 

@@ -1,9 +1,9 @@
 <script lang="ts">
-	export let cents: number = 0;
-	let textWidth: number;
-	let inputHeight: number;
-	$: displayAmount = centsToDisplayAmount(cents);
-	$: actualTextWidth = !displayAmount ? 0 : textWidth;
+	let { cents = $bindable() }: { cents: number } = $props();
+	let textWidth = $state(0);
+	let inputHeight = $state(0);
+	let displayAmount = $derived.by(() => centsToDisplayAmount(cents));
+	let actualTextWidth = $derived(!displayAmount ? 0 : textWidth);
 
 	const centsToDisplayAmount = (cents: number) => {
 		const paddedValue = cents.toString().padStart(3, '0');
@@ -15,7 +15,7 @@
 	};
 </script>
 
-<div id="input-container" bind:clientHeight={inputHeight}>
+<div id="input-container" bind:clientHeight={inputHeight} class="w-full max-w-xs">
 	<!-- svelte-ignore a11y-autofocus -->
 	<input
 		type="text"
@@ -23,7 +23,7 @@
 		inputmode="numeric"
 		value={displayAmount}
 		class="input input-bordered w-full max-w-xs"
-		on:input={(event) => {
+		oninput={(event) => {
 			cents = displayAmountToCents(event.currentTarget.value);
 		}}
 		autofocus
