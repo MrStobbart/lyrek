@@ -41,6 +41,19 @@ export const loadedExpenseIdsDerived = createGlobalDerivedState(() => {
 	const [getExpenses] = expensesState;
 	return Object.fromEntries(getExpenses().map((item) => [item.id, true]));
 });
+const initialDefaultCategorie = ['groceries', 'holidays', 'pharmacy', 'drugstore', 'cat'];
+export const availableCategoriesDerived = createGlobalDerivedState(() => {
+	const [getExpenses] = expensesState;
+	console.time('start');
+	const categories = [
+		...new Set([
+			...initialDefaultCategorie,
+			...getExpenses().flatMap(({ category }) => (category ? category : []))
+		])
+	];
+	console.timeEnd('start');
+	return categories;
+});
 
 export const sendMessageState = createGlobalState<SendMessageToServer | undefined>(undefined);
 

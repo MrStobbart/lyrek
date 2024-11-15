@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Expense, MessageToServer } from '$lib/types';
 	import CurrencyInput from '../routes/CurrencyInput.svelte';
+	import { availableCategoriesDerived } from './stores.svelte';
 
 	let {
 		id = crypto.randomUUID(),
@@ -19,8 +20,6 @@
 	} = $props();
 
 	let error = $state('');
-
-	const availableCategories = ['groceries', 'holidays', 'pharmacy', 'drugstore', 'cat'];
 
 	const validateInput = () => {
 		if (!title) {
@@ -84,13 +83,10 @@
 		<p class="text-red-600">{error}</p>
 	{/if}
 
-	<!-- TODO add previous top titles that can be clicked instead of the category -->
-	<!-- TODO availableCagetories are all that were already selected in expenses -->
-	<!-- TODO alternatively you can also create a new one  -->
-	<div class="flex gap-4">
-		{#each availableCategories as availableCategory}
+	<div class="grid grid-cols-3 gap-4">
+		{#each availableCategoriesDerived() as availableCategory}
 			<button
-				class="btn text-xs font-light w-16"
+				class="btn text-xs font-light w-16 btn-sm"
 				class:btn-accent={category === availableCategory}
 				onclick={() => {
 					saveExpense(availableCategory);
@@ -98,4 +94,15 @@
 			>
 		{/each}
 	</div>
+	<input
+		class="input input-bordered w-full max-w-xs"
+		bind:value={category}
+		placeholder="New category name"
+	/>
+	<button
+		class="btn text-xs font-light btn-sm"
+		onclick={() => {
+			saveExpense(category);
+		}}>Save with new category</button
+	>
 </div>
