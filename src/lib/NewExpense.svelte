@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Expense, MessageToServer } from '$lib/types';
 	import CurrencyInput from '../routes/CurrencyInput.svelte';
+	import CategorySelection from './CategorySelection.svelte';
 	import { availableCategoriesDerived } from './stores.svelte';
 
 	let {
@@ -83,26 +84,5 @@
 		<p class="text-red-600">{error}</p>
 	{/if}
 
-	<div class="grid grid-cols-3 gap-4">
-		{#each availableCategoriesDerived() as availableCategory}
-			<button
-				class="btn text-xs font-light w-16 btn-sm"
-				class:btn-accent={category === availableCategory}
-				onclick={() => {
-					saveExpense(availableCategory);
-				}}>{availableCategory}</button
-			>
-		{/each}
-	</div>
-	<input
-		class="input w-full max-w-xs input-sm"
-		bind:value={category}
-		placeholder="New category name"
-	/>
-	<button
-		class="btn text-xs font-light btn-sm"
-		onclick={() => {
-			saveExpense(category);
-		}}>Save with new category</button
-	>
+	<CategorySelection selectedCategory={category} onClick={saveExpense} />
 </div>

@@ -21,6 +21,7 @@ export type ExpenseByParticipant = {
 export type Expense = {
 	id: string;
 	title: string;
+	// Cents
 	amount: number;
 	currency: string;
 	by: string;
