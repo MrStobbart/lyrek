@@ -1,14 +1,14 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import NewExpense from '$lib/NewExpense.svelte';
-	import { updateExpense } from '$lib/stores.svelte';
+	import { updateExpenses } from '$lib/stores.svelte';
 	import type { Expense } from '$lib/types';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
 
 	const save = (updatedExpense: Expense) => {
-		updateExpense(updatedExpense);
+		updateExpenses([updatedExpense]);
 		goto('/expenses');
 	};
 </script>

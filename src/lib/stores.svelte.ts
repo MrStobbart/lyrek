@@ -15,18 +15,14 @@ export const deleteExpense = (deleteExpenseId: string) => {
 	sendMessage()?.({ deleteExpenseId });
 };
 
-export const updateExpense = (updateExpense: Expense) => {
+export const updateExpenses = (updatedExpenses: Expense[]) => {
 	const [getExpenses, setExpenses] = expensesState;
 	const [getSendMessage] = sendMessageState;
+
 	setExpenses(
-		getExpenses().map((expense) => {
-			if (updateExpense.id === expense.id) {
-				return updateExpense;
-			}
-			return expense;
-		})
+		getExpenses().map((expense) => updatedExpenses.find(({ id }) => id === expense.id) ?? expense)
 	);
-	getSendMessage()?.({ updateExpense });
+	getSendMessage()?.({ updateExpenses: updatedExpenses });
 };
 
 export const createExpense = (createExpense: Expense) => {
@@ -48,9 +44,10 @@ export const availableCategoriesDerived = createGlobalDerivedState(() => {
 	const categories = [
 		...new Set([
 			...initialDefaultCategorie,
-			...getExpenses().flatMap(({ category }) => (category ? category : []))
+			...getExpenses().flatMap(({ category }) => (category ? category.toLocaleLowerCase() : []))
 		])
 	];
+
 	console.timeEnd('start');
 	return categories;
 });

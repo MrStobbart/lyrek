@@ -30,6 +30,7 @@
 		class="btn text-xs font-light btn-sm"
 		onclick={() => {
 			onClick(newCategory);
+			newCategory = '';
 		}}>Save with new category</button
 	>
 </div>

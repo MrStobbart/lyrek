@@ -1,6 +1,6 @@
 export type MessageToServer = {
 	createExpense?: Expense;
-	updateExpense?: Expense;
+	updateExpenses?: Expense[];
 	deleteExpenseId?: string;
 };
 
@@ -9,7 +9,7 @@ export type SendMessageToServer = (message: MessageToServer, withRetry?: boolean
 export type MessageToClient = {
 	expenses?: Expense[];
 	createdExpense?: Expense;
-	updatedExpense?: Expense;
+	updatedExpenses?: Expense[];
 	deletedExpenseId?: string;
 };
 

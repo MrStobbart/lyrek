@@ -4,21 +4,11 @@
 	import TrashIcon from '$lib/icons/trashIcon.svelte';
 	import { deleteExpense, expensesState, participantsState } from '$lib/stores.svelte';
 	import { timestampToDisplay } from '$lib/util';
+	import { getBalance } from './calculateBalance';
 	const [getParticipants] = participantsState;
 	const [getExpenses] = expensesState;
 
-	let balance = $derived.by(() =>
-		Object.fromEntries(
-			getParticipants().map((name) => [
-				name,
-				getExpenses().reduce(
-					(sum, { participants }) =>
-						sum + (participants[name].plus ?? 0) - (participants[name].minus ?? 0),
-					0
-				)
-			])
-		)
-	);
+	let balance = $derived.by(() => getBalance(getParticipants(), getExpenses()));
 </script>
 
 <div class="flex flex-col gap-4">
@@ -40,11 +30,13 @@
 					<th>Last updated</th>
 					<th>Category</th>
 					<th>Payed by</th>
+					<th>By Person</th>
+					<th>Payment</th>
 					<th></th>
 				</tr>
 			</thead>
 			<tbody>
-				{#each getExpenses() as { id, title, amount, by, category, date }}
+				{#each getExpenses() as { id, title, amount, by, category, date, participants, isPayment }}
 					<!-- TODO add pinned rows of months later -->
 					<tr class="text-center">
 						<th>{title}</th>
@@ -52,6 +44,20 @@
 						<td>{timestampToDisplay(date)}</td>
 						<td class="capitalize">{category}</td>
 						<td class="capitalize">{by}</td>
+						<td class="flex flex-col">
+							{#each getParticipants() as participant}
+								<div class="text-sm flex gap-1">
+									<div class="capitalize">{participant}</div>
+									{#if participants[participant].plus > 0}
+										<div>+{toDisplayEur(participants[participant].plus)}</div>
+									{/if}
+									{#if participants[participant].minus < 0}
+										<div>{toDisplayEur(participants[participant].minus)}</div>
+									{/if}
+								</div>
+							{/each}
+						</td>
+						<td>{isPayment ? 'payment' : ''}</td>
 						<td>
 							<a class="btn btn-circle btn-outline" href={`/edit/${id}`}><EditIcon /></a>
 							<button class="btn btn-circle btn-outline" onclick={() => deleteExpense(id)}
