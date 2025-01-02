@@ -20,7 +20,9 @@
 		availableCategoriesDerived().map((category) => {
 			return {
 				category,
-				expenses: fullyTrackedYears.filter((expense) => expense.category === category)
+				expenses: fullyTrackedYears.filter(
+					(expense) => expense.category?.toLocaleLowerCase() === category.toLocaleLowerCase()
+				)
 			};
 		})
 	);
