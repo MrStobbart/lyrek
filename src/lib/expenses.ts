@@ -30,5 +30,11 @@ export const toCent = (amount: string): number => {
 	return parseFloat((amount ?? '').replaceAll(',', '.')) * 100 || 0;
 };
 
-export const toDisplayEur = (amount?: number) =>
-	amount ? `${amount.toString().slice(0, -2)},${amount.toString().slice(-2)}€` : 0;
+export const toDisplayEur = (amount?: number) => {
+	if (amount === undefined) {
+		return '';
+	}
+	// no half cents
+	const roundedAmount = Math.round(amount).toString().padStart(3, '0');
+	return `${roundedAmount.slice(0, -2)},${roundedAmount.slice(-2)}€`;
+};

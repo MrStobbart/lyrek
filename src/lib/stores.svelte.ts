@@ -38,6 +38,7 @@ export const loadedExpenseIdsDerived = createGlobalDerivedState(() => {
 	return Object.fromEntries(getExpenses().map((item) => [item.id, true]));
 });
 const initialDefaultCategorie = ['groceries', 'holidays', 'pharmacy', 'drugstore', 'cat'];
+
 export const availableCategoriesDerived = createGlobalDerivedState(() => {
 	const [getExpenses] = expensesState;
 	console.time('start');
