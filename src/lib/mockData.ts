@@ -9,8 +9,8 @@ export const mockExpenses = [
 		category: 'holidays',
 		isPayment: false,
 		participants: {
-			lydia: { plus: 0, minus: -23446 },
-			marek: { plus: 47108, minus: -23446 }
+			Lydia: { plus: 0, minus: -23446 },
+			Marek: { plus: 47108, minus: -23446 }
 		}
 	},
 	{
@@ -23,8 +23,8 @@ export const mockExpenses = [
 		category: 'holidays',
 		isPayment: false,
 		participants: {
-			lydia: { plus: 0, minus: -17703 },
-			marek: { plus: 35794, minus: -17703 }
+			Lydia: { plus: 0, minus: -17703 },
+			Marek: { plus: 35794, minus: -17703 }
 		}
 	},
 	{
@@ -37,9 +37,9 @@ export const mockExpenses = [
 		category: 'holidays',
 		isPayment: false,
 		participants: {
-			lydia: { plus: 0, minus: -11072 },
-			marek: { plus: 22256, minus: -11072 }
+			Lydia: { plus: 0, minus: -11072 },
+			Marek: { plus: 22256, minus: -11072 }
 		}
 	}
 ];
-export const mockParticipants = ['marek', 'lydia'];
+export const mockParticipants = ['Marek', 'Lydia'];

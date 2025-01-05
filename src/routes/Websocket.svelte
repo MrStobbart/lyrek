@@ -39,7 +39,7 @@
 
 	webSocket.onmessage = (e) => {
 		console.log('Received message:', e.data);
-		const { expenses, createdExpense, updatedExpense, deletedExpenseId }: MessageToClient =
+		const { expenses, createdExpense, updatedExpenses, deletedExpenseId }: MessageToClient =
 			JSON.parse(e.data);
 
 		if (expenses) {
@@ -51,15 +51,16 @@
 			setExpenses([...getExpenses(), createdExpense]);
 		}
 
-		if (updatedExpense) {
-			console.log({ updatedExpense });
+		if (updatedExpenses) {
+			console.log({ updatedExpenses });
 
 			setExpenses(
-				getExpenses().map((oldExpense) =>
-					oldExpense.id === updatedExpense.id ? updatedExpense : oldExpense
+				getExpenses().map(
+					(oldExpense) =>
+						updatedExpenses.find((updatedExpense) => oldExpense.id === updatedExpense.id) ??
+						oldExpense
 				)
 			);
-			console.log({ expenses: getExpenses() });
 		}
 
 		if (deletedExpenseId) {

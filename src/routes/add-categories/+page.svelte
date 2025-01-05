@@ -1,32 +1,34 @@
 <script lang="ts">
 	import CategorySelection from '$lib/CategorySelection.svelte';
 	import { toDisplayEur } from '$lib/expenses';
-	import { expensesState, participantsState, updateExpenses } from '$lib/stores.svelte';
+	import {
+		availableCategoriesDerived,
+		expensesState,
+		participantsState,
+		updateExpenses
+	} from '$lib/stores.svelte';
 	import type { Expense } from '$lib/types';
 	import { dateToDisplay } from '$lib/util';
 
 	const [getExpenses] = expensesState;
 	const [getParticipants] = participantsState;
 
-	console.log(
-		'categories',
-		getExpenses().map(({ category }) => category)
-	);
+	let categoryToRedo = $state('');
 
 	const expensesWithoutCategories = $derived.by(() =>
-		getExpenses().filter(
-			({ category, isPayment }) =>
-				(category === undefined || category === '' || category === '–') && !isPayment
-		)
+		getExpenses().filter(({ category, isPayment }) => {
+			if (categoryToRedo === '') {
+				return (category === undefined || category === '' || category === '–') && !isPayment;
+			}
+
+			return category === categoryToRedo;
+		})
 	);
 
 	const firstExpenseWithoutCategory = $derived(expensesWithoutCategories[0]);
 
 	const setCategory = (selectedCategory: string, currentExpense: Expense) => {
 		const updatedExpenses = getExpenses().map((expense) => {
-			console.log('firstExpenseWithoutCategory.title', currentExpense.title);
-			console.log('expense.title', expense.title);
-
 			if (expense.title.toLocaleLowerCase() === currentExpense.title.toLocaleLowerCase()) {
 				expense.category = selectedCategory;
 			}
@@ -37,6 +39,12 @@
 </script>
 
 <div class="flex flex-col gap-4 items-center">
+	<select class="select w-full max-w-xs" bind:value={categoryToRedo}>
+		<option disabled selected value=""></option>
+		{#each availableCategoriesDerived() as availableCategory}
+			<option value={availableCategory}>{availableCategory}</option>
+		{/each}
+	</select>
 	<span>Exenses without categories: {expensesWithoutCategories.length}</span>
 	{#if firstExpenseWithoutCategory === undefined}
 		<span>All expenses categorised</span>
@@ -48,11 +56,11 @@
 		{#each getParticipants() as participant}
 			<div class="text-sm flex gap-1">
 				<div class="capitalize">{participant}</div>
-				{#if firstExpenseWithoutCategory.participants[participant].plus > 0}
-					<div>+{toDisplayEur(firstExpenseWithoutCategory.participants[participant].plus)}</div>
+				{#if firstExpenseWithoutCategory.participants[participant]?.plus > 0}
+					<div>+{toDisplayEur(firstExpenseWithoutCategory.participants[participant]?.plus)}</div>
 				{/if}
-				{#if firstExpenseWithoutCategory.participants[participant].minus < 0}
-					<div>{toDisplayEur(firstExpenseWithoutCategory.participants[participant].minus)}</div>
+				{#if firstExpenseWithoutCategory.participants[participant]?.minus < 0}
+					<div>{toDisplayEur(firstExpenseWithoutCategory.participants[participant]?.minus)}</div>
 				{/if}
 			</div>
 		{/each}

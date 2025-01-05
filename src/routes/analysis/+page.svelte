@@ -1,10 +1,14 @@
 <script lang="ts">
 	import { toDisplayEur } from '$lib/expenses';
 	import { availableCategoriesDerived, expensesState, participantsState } from '$lib/stores.svelte';
+	import { Chart } from 'chart.js/auto';
 	import { sumExpenses } from './analysisHelper';
+	import { onMount } from 'svelte';
 
 	const [getExpenses] = expensesState;
 	const [getParticipants] = participantsState;
+
+	let canvas: HTMLCanvasElement | undefined = undefined;
 
 	const fullyTrackedYears = $derived.by(() =>
 		getExpenses().filter((expense) => {
@@ -26,6 +30,47 @@
 			};
 		})
 	);
+
+	onMount(() => {
+		if (canvas) {
+			const chartInstance = new Chart(canvas, {
+				type: 'bar',
+				data: {
+					labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+					datasets: [
+						{
+							label: '# of Votes',
+							data: [12, 19, 3, 5, 2, 3],
+							borderWidth: 1,
+							stack: 'toast'
+						},
+						{
+							label: '# of Votes 2',
+							data: [12, 19, 3, 5, 2, 3],
+							borderWidth: 1,
+							stack: 'toast'
+						},
+						{
+							label: '# of Votes 2',
+							data: [12, 19, 3, 5, 2, 3],
+							borderWidth: 1,
+							stack: 'tomate'
+						}
+					]
+				},
+				options: {
+					scales: {
+						y: {
+							beginAtZero: true
+						}
+					}
+				}
+			});
+			return () => {
+				chartInstance.destroy();
+			};
+		}
+	});
 </script>
 
 <div class="flex flex-col">
@@ -36,4 +81,6 @@
 			)}</span
 		>
 	{/each}
+
+	<canvas bind:this={canvas}></canvas>
 </div>

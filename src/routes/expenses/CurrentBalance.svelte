@@ -8,6 +8,8 @@
 	const [getParticipants] = participantsState;
 	const [getExpenses] = expensesState;
 
+	$inspect(getParticipants());
+
 	let balance = $derived.by(() => getBalance(getParticipants(), getExpenses()));
 </script>
 
@@ -48,11 +50,11 @@
 							{#each getParticipants() as participant}
 								<div class="text-sm flex gap-1">
 									<div class="capitalize">{participant}</div>
-									{#if participants[participant].plus > 0}
-										<div>+{toDisplayEur(participants[participant].plus)}</div>
+									{#if participants[participant]?.plus > 0}
+										<div>+{toDisplayEur(participants[participant]?.plus)}</div>
 									{/if}
-									{#if participants[participant].minus < 0}
-										<div>{toDisplayEur(participants[participant].minus)}</div>
+									{#if participants[participant]?.minus < 0}
+										<div>{toDisplayEur(participants[participant]?.minus)}</div>
 									{/if}
 								</div>
 							{/each}

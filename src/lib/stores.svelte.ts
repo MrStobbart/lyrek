@@ -55,6 +55,6 @@ export const availableCategoriesDerived = createGlobalDerivedState(() => {
 
 export const sendMessageState = createGlobalState<SendMessageToServer | undefined>(undefined);
 
-export const participantsState = createGlobalState<string[]>(['marek', 'lydia']);
+export const participantsState = createGlobalState<string[]>(['Marek', 'Lydia']);
 
 export const currentUserState = createGlobalPersistantState<string>('currentUser', '');

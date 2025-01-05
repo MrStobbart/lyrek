@@ -16,8 +16,8 @@ export const rowToExpense = (row: string[]): Expense => {
 			date: new Date(date).getTime(),
 			isPayment: false,
 			participants: {
-				lydia: { minus: toCent(lydiaMinus), plus: toCent(lydiaPlus) },
-				marek: { minus: toCent(marekMinus), plus: toCent(marekPlus) }
+				Lydia: { minus: toCent(lydiaMinus), plus: toCent(lydiaPlus) },
+				Marek: { minus: toCent(marekMinus), plus: toCent(marekPlus) }
 			}
 		};
 	} catch (error) {

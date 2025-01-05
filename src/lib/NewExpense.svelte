@@ -32,6 +32,8 @@
 			return false;
 		}
 
+		console.log('by', by);
+
 		if (by === 'Payed by' || by === '') {
 			error = 'Payed by is required';
 			return false;
@@ -60,8 +62,8 @@
 			category,
 			isPayment: false,
 			participants: {
-				marek: { minus: parseInt((amount / 2).toFixed()), plus: getPlusFor('marek', amount) },
-				lydia: { minus: parseInt((amount / 2).toFixed()), plus: getPlusFor('lydia', amount) }
+				Marek: { minus: -parseInt((amount / 2).toFixed()), plus: getPlusFor('Marek', amount) },
+				Lydia: { minus: -parseInt((amount / 2).toFixed()), plus: getPlusFor('Lydia', amount) }
 			}
 		});
 
@@ -76,8 +78,8 @@
 	<select class="select w-full max-w-xs" bind:value={by}>
 		<option disabled selected value="">Payed by</option>
 		<!-- TODO -->
-		<option value="marek">Marek</option>
-		<option value="lydia">Lydia</option>
+		<option value="Marek">Marek</option>
+		<option value="Lydia">Lydia</option>
 	</select>
 
 	{#if error}

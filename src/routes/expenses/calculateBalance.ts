@@ -6,7 +6,7 @@ export const getBalance = (participants: string[], expenses: Expense[]) => {
 			name,
 			expenses.reduce(
 				(sum, { participants }) =>
-					sum + (participants[name].plus ?? 0) + (participants[name].minus ?? 0),
+					sum + (participants[name]?.plus ?? 0) + (participants[name]?.minus ?? 0),
 				0
 			)
 		])
