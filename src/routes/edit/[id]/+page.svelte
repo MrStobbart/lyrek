@@ -20,6 +20,7 @@
 		amount={data.expenseToEdit.amount}
 		by={data.expenseToEdit.by}
 		category={data.expenseToEdit.category}
+		date={data.expenseToEdit.date}
 		{save}
 	/>
 {:else}

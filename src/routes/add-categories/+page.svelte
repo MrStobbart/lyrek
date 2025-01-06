@@ -14,14 +14,15 @@
 	const [getParticipants] = participantsState;
 
 	let categoryToRedo = $state('');
+	const categorisedExpenseIds = $state<Set<string>>(new Set());
 
 	const expensesWithoutCategories = $derived.by(() =>
-		getExpenses().filter(({ category, isPayment }) => {
+		getExpenses().filter(({ category, isPayment, id }) => {
 			if (categoryToRedo === '') {
 				return (category === undefined || category === '' || category === '–') && !isPayment;
 			}
 
-			return category === categoryToRedo;
+			return !categorisedExpenseIds.has(id) && category === categoryToRedo;
 		})
 	);
 
@@ -34,6 +35,7 @@
 			}
 			return expense;
 		});
+		categorisedExpenseIds.add(currentExpense.id);
 		updateExpenses(updatedExpenses);
 	};
 </script>

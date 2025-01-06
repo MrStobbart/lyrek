@@ -10,12 +10,14 @@
 		amount = 0,
 		by = '',
 		category = '',
+		date = Date.now(),
 		save
 	}: {
 		id?: string;
 		title?: string;
 		amount?: number;
 		by?: string;
+		date?: number;
 		category?: string;
 		save: (expense: Expense) => void;
 	} = $props();
@@ -58,7 +60,7 @@
 			amount,
 			currency: 'EUR',
 			by,
-			date: Date.now(),
+			date,
 			category,
 			isPayment: false,
 			participants: {
